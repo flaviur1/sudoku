@@ -88,8 +88,10 @@ const createValidTable = (table, size, index) => {
   return 0;
 };
 
-const size = 9;
+const generateSudoku = () => {
+  const size = 9;
 
-table = createEmptyTable(size);
-createValidTable(table, size, 0);
-displayTable(table, size);
+  table = createEmptyTable(size);
+  createValidTable(table, size, 0);
+  displayTable(table, size);
+};
