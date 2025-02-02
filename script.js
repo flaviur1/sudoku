@@ -31,78 +31,6 @@ const displayTable = (table, size) => {
   }
 };
 
-// const createTable = (table, size, index) => {
-//   let row = Math.floor(index / size);
-//   let col = index - row * size;
-//   let checkedNumbers = [];
-//   let rand = Math.floor(Math.random() * (size + 1 - 1) + 1);
-
-//   if (!checkedNumbers.includes(rand)) {
-//     table[row][col] = rand;
-//     checkedNumbers.push(rand);
-
-//     if (isValid(table, row, col, size)) {
-//       let returned = createTable(table, size, index + 1);
-
-//       while (returned != 1) {
-//         rand = Math.floor(Math.random() * (size + 1 - 1) + 1);
-
-//         if (!checkedNumbers.includes(rand)) {
-//           table[row][col] = rand;
-//           checkedNumbers.push(rand);
-
-//           if (isValid(table, row, col, size)) {
-//             returned = createTable(table, size, index + 1);
-//           }
-//         }
-//       }
-//     }
-//   }
-//   return 1;
-// };
-
-// const createTable = (table, size, index) => {
-//   if (index == size * size) {
-//     return 1;
-//   }
-//   let row = Math.floor(index / size);
-//   let col = index - row * size;
-//   let checkedNumbers = [];
-//   let rand = Math.floor(Math.random() * size) + 1;
-//   table[row][col] = rand;
-//   checkedNumbers.push(rand);
-
-//   while (isValid(table, row, col, size) === false) {
-//     if (checkedNumbers.length == 8) {
-//       table[row][col] = 0;
-//       return 0;
-//     }
-//     while (checkedNumbers.includes(rand) === true) {
-//       rand = Math.floor(Math.random() * size) + 1;
-//       table[row][col] = rand;
-//     }
-//     checkedNumbers.push(rand);
-//   }
-
-//   let returned = createTable(table, size, index + 1);
-//   while (returned == 0) {
-//     while (isValid(table, row, col, size) === false) {
-//       if (checkedNumbers.length == 8) {
-//         table[row][col] = 0;
-//         return 0;
-//       }
-//       while (checkedNumbers.includes(rand) === true) {
-//         rand = Math.floor(Math.random() * size) + 1;
-//         table[row][col] = rand;
-//       }
-//       checkedNumbers.push(rand);
-//     }
-
-//     returned = createTable(table, size, index + 1);
-//   }
-//   return 1;
-// };
-
 function shuffleArray(array) {
   for (let i = array.length - 1; i >= 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -110,14 +38,43 @@ function shuffleArray(array) {
   }
 }
 
-const createTable = (table, size, index) => {
-  let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-  for (let i = 0; i < 5; i++) shuffleArray(numbers);
-  console.log(numbers);
+const createValidTable = (table, size, index) => {
+  if (index == 81) {
+    return 1;
+  }
+  let numbers = [];
+  for (let i = 1; i <= size; i++) {
+    numbers.push(i);
+  }
+
+  for (let i = 0; i < 5; i++) {
+    shuffleArray(numbers);
+  }
+  //console.log(numbers);
+
+  let row = Math.floor(index / size);
+  let col = index - row * size;
+
+  for (let i = 0; i < numbers.length; i++) {
+    table[row][col] = numbers[i];
+
+    if (isValid(table, row, col, size)) {
+      let returned = createValidTable(table, size, index + 1);
+
+      if (returned == 1) {
+        return 1;
+      }
+    }
+    table[row][col] = 0;
+    if (i == numbers.length - 1) {
+      return 0;
+    }
+  }
+  return 0;
 };
 
 const size = 9;
 
 table = createEmptyTable(size);
-createTable(table, size, 0);
+createValidTable(table, size, 0);
 displayTable(table, size);
