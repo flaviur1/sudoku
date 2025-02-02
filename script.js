@@ -13,11 +13,27 @@ const isValid = (table, row, col, size) => {
     if (i != row) {
       if (table[i][col] == table[row][col]) return false;
     }
-
     if (i != col) {
       if (table[row][i] == table[row][col]) return false;
     }
   }
+
+  let squareStartRow = Math.floor(row / 3) * 3;
+  let squareStartCol = Math.floor(col / 3) * 3;
+
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 3; j++) {
+      let currentRow = squareStartRow + i;
+      let currentCol = squareStartCol + j;
+
+      if (currentRow != row || currentCol != col) {
+        if (table[currentRow][currentCol] == table[row][col]) {
+          return false;
+        }
+      }
+    }
+  }
+
   return true;
 };
 
@@ -50,7 +66,6 @@ const createValidTable = (table, size, index) => {
   for (let i = 0; i < 5; i++) {
     shuffleArray(numbers);
   }
-  //console.log(numbers);
 
   let row = Math.floor(index / size);
   let col = index - row * size;
